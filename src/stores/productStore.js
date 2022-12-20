@@ -41,26 +41,13 @@ export const useProductStore = defineStore({
 			// this.unique.push(uniqueVars);
 		},
 
-		test(item) {
-			console.log(item)
-		},
-
 		swaImg (item)  {
-			console.log(item)
-			 this.products.map((hand) => {
-					// console.log(hand.variants);
-					hand.images.map((img) => {
-					 //console.log(img.alt + ' swatch')
-					 //console.log(img.alt)
-						 if (img.alt  === item + ' swatch') {
-							 console.log('I M in')
-							 console.log(img.src)
-							 return img.src
-		 
-						 }
-					 })
-				 
-			 })
+			const product = this.products.find((product) => {
+				return product.images.some((image) => image.alt === item + ' swatch');
+			});
+			// Return the src attribute of the matching image, or null if no match was found
+			return product ? product.images.find((image) => image.alt === item + ' swatch').src : null;
+			
 		 }
 	},
 
