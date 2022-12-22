@@ -1,5 +1,5 @@
 <template>
-	<div class="product productOne">
+	<div class="product">
 		<Carousel
 			id="gallery"
 			:items-to-show="3"
@@ -49,14 +49,16 @@
 									class="productSwatchImg"
 									@click="
 										updateImage(
-                                            products,
+											products,
 											product.handle,
 											swatch,
 											null
 										)
 									"
 								>
-									<img :src="getSwatchImage(products, swatch)" />
+									<img
+										:src="getSwatchImage(products, swatch)"
+									/>
 								</span>
 							</div>
 						</div>
@@ -64,8 +66,15 @@
 							<div
 								class="productSize"
 								v-for="size in product.options[1].values"
-								:class="{ active: product.sizeClass === size }"
-								@click="updateImage(products, product.handle, null, size)"
+								:class="{ active: product.sizeClass === size  }"
+								@click="
+									updateImage(
+										products,
+										product.handle,
+										null,
+										size
+									)
+								"
 							>
 								<span>{{ toShortHand(size) }}</span>
 							</div>
@@ -74,7 +83,7 @@
 				</div>
 			</Slide>
 		</Carousel>
-	</div> 
+	</div>
 </template>
 
 <script setup>
@@ -90,11 +99,11 @@ const currentSlide = ref(0);
 const currentSlideTwo = ref(0);
 
 const slideTo = (index) => {
-    currentSlideTwo.value = index;
+	currentSlideTwo.value = index;
 };
 
 const slideToNext = (index) => {
-    currentSlideTwo.value = index;
+	currentSlideTwo.value = index;
 };
 
 const productStore = useProductStore();
@@ -102,7 +111,7 @@ productStore.fetchProduct();
 
 const props = defineProps({
 	products: Object,
-    productsBottom: String,
+	productsBottom: String,
 	image: String,
 });
 
@@ -124,50 +133,64 @@ const toShortHand = (size) => {
 	return sizeMappings[size] || size;
 };
 
+
+
 const getSwatchImage = (products, item) => {
-    const product = products.find((product) => {
-        return product.images.some((image) => image.alt === `${item} swatch`);
-    });
-    return product?.images.find((image) => image.alt === `${item} swatch`)?.src || null;
+	const product = products.find((product) => {
+		return product.images.some((image) => image.alt === `${item} swatch`);
+	});
+	return (
+		product?.images.find((image) => image.alt === `${item} swatch`)?.src ||
+		null
+	);
 };
 
 const updateImage = (productsList, productHandle, swatchName, size) => {
-  // Find the product with the matching handle
-  const product = productsList.find((product) => product.handle === productHandle);
-  // Find the variant with the matching alt text
-  const variant = product.variants.find((variant) => variant.option1 === swatchName);
-  const variant2 = product.variants.find((variant) => variant.option2 === size);
-  // Check the product type
-  const dataType = product.tags.find((tag) => tag === 'mixmatch_top' || tag === 'mixmatch_bottom');
-  // Update the product properties based on the product type
-  let updatedProduct;
-  if (swatchName) {
-    updatedProduct = {
-      ...product,
-      imageUrl: variant?.featured_image.src,
-      activeClass: variant?.option1,
-    };
-  } else if (size) {
-    updatedProduct = {
-      ...product,
-      sizeClass: variant2?.option2,
-    };
-  }
-  // Update the products array based on the product type
-  if (dataType === 'mixmatch_top') {
-    productStore.products = productsList.map((product) =>
-      product.handle === productHandle ? updatedProduct : product
-    );
-  } else if (dataType === 'mixmatch_bottom') {
-    productStore.bottomProducts = productsList.map((product) =>
-      product.handle === productHandle ? updatedProduct : product
-    );
-  }
+	// Find the product with the matching handle
+	const product = productsList.find(
+		(product) => product.handle === productHandle
+	);
+	// Find the variant with the matching alt text
+	const variant = product.variants.find(
+		(variant) => variant.option1 === swatchName
+	);
+	const variant2 = product.variants.find(
+		(variant) => variant.option2 === size
+	);
+
+    console.log(variant2)
+	// Check the product type
+	const dataType = product.tags.find(
+		(tag) => tag === "mixmatch_top" || tag === "mixmatch_bottom"
+	);
+	// Update the product properties based on the product type
+	let updatedProduct;
+	if (swatchName) {
+		updatedProduct = {
+			...product,
+			imageUrl: variant?.featured_image.src,
+			activeClass: variant?.option1,
+		};
+	} else if (size) {
+		updatedProduct = {
+			...product,
+			sizeClass: variant2?.option2,
+		};
+	}
+	// Update the products array based on the product type
+	if (dataType === "mixmatch_top") {
+		productStore.products = productsList.map((product) =>
+			product.handle === productHandle ? updatedProduct : product
+		);
+	} else if (dataType === "mixmatch_bottom") {
+		productStore.bottomProducts = productsList.map((product) =>
+			product.handle === productHandle ? updatedProduct : product
+		);
+	}
 };
 
-
 // const updateImage = (productsList, productHandle, swatchName, size) => {
-   
+
 //       const product = productsList.find((product) => product.handle === productHandle);
 //         console.log(product);
 //       // Find the variant with the matching alt text
@@ -213,94 +236,94 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 //         });
 //     }
 // };
-
 </script>
 <style scoped lang="scss">
 
-.carousel__viewport {
-    padding: 0 30px;
+.productOne {
+    .carousel__viewport {
+	    padding: 40px 0 0 0;
+    }
 }
 
+.productRight {
+    width: 100%;
+}
 .product {
-    overflow: hidden;
-    padding-top: 100px;
+	overflow: hidden;
+	padding-top: 100px;
 }
 .productOne .left {
 	.carousel__slide--visible {
-        &.carousel__slide--active {
-            
-            &::before {
-                z-index: 1;
-                content: "Select";
-                position: absolute;
-                top: -4px;
-                border-bottom: 3px solid white;
-                height: 48px;
-                width: 81%;
+		&.carousel__slide--active {
+			&::before {
+				z-index: 1;
+				content: "Select";
+				position: absolute;
+				top: -4px;
+				border-bottom: 3px solid white;
+				height: 48px;
+				width: 81%;
+			}
 
-            }
+			&::after {
+				content: "↓";
+				position: absolute;
+				top: 18px;
+				border-bottom: 2px solid;
+				width: 100%;
+			}
 
-            &::after {
-                content: "↓";
-                position: absolute;
-                top: 18px;
-                border-bottom: 2px solid;
-                width: 100%;;
-            }
-
-            img {
-                border-left: 2px solid;
-		        border-right: 2px solid;
-            }
-	    }
-    }
+			img {
+				border-left: 2px solid;
+				border-right: 2px solid;
+			}
+		}
+	}
 }
 
-.productTwo{
-    padding-top: 0;
-    margin-top: -5px;
-     .left {
-        .carousel__slide--visible {
-            &.carousel__slide--active {
-                
-                &::before {
-                    z-index: 1;
-                    content: "Select";
-                    position: absolute;
-                    bottom: -4px;
-                    border-top: 3px solid white;
-                    height: 48px;
-                    width: 81%;
-                    line-height: 60px;
+.productTwo {
+	padding-top: 0;
+	margin-top: -5px;
+	.left {
+		.carousel__slide--visible {
+			&.carousel__slide--active {
+				&::before {
+					z-index: 1;
+					content: "Select";
+					position: absolute;
+					bottom: -4px;
+					border-top: 3px solid white;
+					height: 48px;
+					width: 81%;
+					line-height: 60px;
+				}
 
-                }
+				&::after {
+					content: "↑";
+					position: absolute;
+					bottom: 18px;
+					border-top: 2px solid;
+					width: 100%;
+				}
 
-                &::after {
-                    content: "↑";
-                    position: absolute;
-                    bottom: 18px;
-                    border-top: 2px solid;
-                    width: 100%;;
-                }
-
-                img {
-                    border-left: 2px solid;
-                    border-right: 2px solid;
-                }
-            }
-        }
-    }
+				img {
+					border-left: 2px solid;
+					border-right: 2px solid;
+				}
+			}
+		}
+	}
 }
 
 .box {
 	width: 50%;
 }
 .productOne .carousel__slide {
-    padding: 40px 0 0 0 !important;
+	padding: 40px 0 0 0 !important;
 }
 
 .productTwo .carousel__slide {
-    padding: 0 0 40px 0 !important;
+	padding: 0 0 40px 0 !important;
 }
 
 .left {

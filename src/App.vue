@@ -15,10 +15,12 @@ import CarousalCard from '@/components/Carousal.vue';
 <template>
     <ProductCard 
     :products="productStore.products"
+    class="productOne"
     />
 
     <ProductCard 
     :products="productStore.bottomProducts"
+    class="productTwo"
     />
   
    
