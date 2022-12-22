@@ -4,12 +4,26 @@ export const useProductStore = defineStore({
 	id: "productStore",
 	state: () => ({
 		products: {},
-        variants: [],
-		unique:{},
+		bottomProducts: {},
 	}),
 
 	actions: {
-
+		async fetchProductBottom() {
+			const urls = [
+				"https://www.stio.com/products/mens-objective-pro-bib?view=json",
+				"https://www.stio.com/products/mens-environ-bib?view=json",
+				"https://www.stio.com/products/mens-environ-pant?view=json",
+				"https://www.stio.com/products/mens-raymer-pant?view=json",
+				"https://www.stio.com/products/mens-doublecharge-insulated-pant?view=json",
+				"https://www.stio.com/products/mens-upslope-touring-pant?view=json",
+				"https://www.stio.com/products/mens-fernos-insulated-knicker?view=json",
+			];
+			const response = await Promise.all(
+				urls.map((url) => fetch(url).then((res) => res.json()))
+			);
+			console.log(response);
+			this.bottomProducts = response;
+		},
 		
 		async fetchProduct() {
 			const urls = [
@@ -34,6 +48,12 @@ export const useProductStore = defineStore({
 			});
 			return product?.images.find((image) => image.alt === `${item} swatch`)?.src || null;
 		  },
+		swaImgBottom(item) {
+		const product = this.bottomProducts.find((product) => {
+			return product.images.some((image) => image.alt === `${item} swatch`);
+		});
+		return product?.images.find((image) => image.alt === `${item} swatch`)?.src || null;
+		},
 	},
 
 	getters: {

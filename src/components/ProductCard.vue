@@ -1,12 +1,12 @@
 <template>
-	<div class="product">
+	<div class="product productOne">
 		<Carousel
 			id="gallery"
 			:items-to-show="3"
 			:wrap-around="true"
 			v-model="currentSlide"
-            class="left box"
-            :transition="500"
+			class="left box"
+			:transition="500"
 		>
 			<Slide v-for="(product, index) in products" :key="product.id">
 				<img
@@ -16,9 +16,9 @@
 					"
 				/>
 			</Slide>
-            <template #addons>
-                <Navigation />
-            </template>
+			<template #addons>
+				<Navigation />
+			</template>
 		</Carousel>
 
 		<Carousel
@@ -27,7 +27,8 @@
 			:wrap-around="true"
 			v-model="currentSlide"
 			ref="carousel"
-            class="right box"
+			class="right box"
+			:transition="500"
 		>
 			<Slide v-for="(product, index) in products" :key="product.id">
 				<div class="carousel__item" @click="slideTo(index)">
@@ -73,6 +74,82 @@
 			</Slide>
 		</Carousel>
 	</div>
+
+    <div class="product productTwo">
+		<Carousel
+			id="galleryTwo"
+			:items-to-show="3"
+			:wrap-around="true"
+			v-model="currentSlideTwo"
+			class="left box"
+			:transition="500"
+		>
+			<Slide v-for="(product, index) in productsBottom" :key="product.id">
+				<img
+					:src="
+						product.imageUrl ??
+						product.variants[0].featured_image.src
+					"
+				/>
+			</Slide>
+			<template #addons>
+				<Navigation />
+			</template>
+		</Carousel>
+
+		<Carousel
+			id="thumbnailsTwo"
+			:items-to-show="1"
+			:wrap-around="true"
+			v-model="currentSlideTwo"
+			ref="carousel"
+			class="right box"
+			:transition="500"
+		>
+			<Slide v-for="(product, index) in productsBottom" :key="product.id">
+				<div class="carousel__item" @click="slideToNext(index)">
+					<div class="productRight">
+						<h2 class="productTitle">{{ product.title }}</h2>
+						<h2 class="productPrice">
+							{{ formatedPrice(product.price) }}
+						</h2>
+						<div class="swatch">
+							<div
+								class="productSwatch"
+								v-for="swatch in product.options[0].values"
+							>
+								<span
+									:class="{
+										active: product.activeClass === swatch,
+									}"
+									class="productSwatchImg"
+									@click="
+										updateImageBottom(
+											product.handle,
+											swatch,
+											null
+										)
+									"
+								>
+									<img :src="productStore.swaImgBottom(swatch)" />
+								</span>
+							</div>
+						</div>
+						<div class="size">
+							<div
+								class="productSize"
+								v-for="size in product.options[1].values"
+								:class="{ active: product.sizeClass === size }"
+								@click="updateImageBottom(product.handle, null, size)"
+							>
+								<span>{{ toShortHand(size) }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</Slide>
+		</Carousel>
+	</div>
 </template>
 
 <script setup>
@@ -84,18 +161,24 @@ import { Carousel, Slide, Navigation } from "vue3-carousel";
 
 import "vue3-carousel/dist/carousel.css";
 
-const slides = ref(["Slide 1", "Slide 2", "Slide 3", "Slide 4", "Slide 5"]);
 const currentSlide = ref(0);
+const currentSlideTwo = ref(0);
 
 const slideTo = (index) => {
-	currentSlide.value = index;
+    currentSlideTwo.value = index;
+};
+
+const slideToNext = (index) => {
+    currentSlideTwo.value = index;
 };
 
 const productStore = useProductStore();
 productStore.fetchProduct();
+productStore.fetchProductBottom();
 
 const props = defineProps({
 	products: String,
+    productsBottom: String,
 	image: String,
 });
 
@@ -116,27 +199,6 @@ const sizeMappings = {
 const toShortHand = (size) => {
 	return sizeMappings[size] || size;
 };
-
-// const toShortHand = (size) => {
-// 	switch (size) {
-// 		case "Extra Small":
-// 			return "XS";
-// 		case "Small":
-// 			return "S";
-// 		case "Medium":
-// 			return "M";
-// 		case "Large":
-// 			return "L";
-// 		case "Extra Large":
-// 			return "XL";
-// 		case "Extra Extra Large":
-// 			return "XXL";
-// 		case "Extra Extra Extra Large":
-// 			return "XXXL";
-// 		default:
-// 			return size;
-// 	}
-// };
 
 const updateImage = (productHandle, swatchName, size) => {
 	productStore.products = productStore.products.map((product) => {
@@ -172,82 +234,136 @@ const updateImage = (productHandle, swatchName, size) => {
 	});
 };
 
-// const selectedSize = (productHandle, size) => {
-//     const product = productStore.products.find((product) => product.handle === productHandle);
-//     // Find the variant with the matching alt text
-//     const variant = product.variants.find((variant) => variant.option2 === size);
+const updateImageBottom = (productHandle, swatchName, size) => {
+	productStore.bottomProducts = productStore.bottomProducts.map((product) => {
+		if (product.handle !== productHandle) {
+			return product;
+		}
 
-//     //console.log(variant);
-//     // Update the imageUrl property for the product
-//     productStore.products = productStore.products.map((product) => {
-//     if (product.handle === productHandle) {
-//         return {
-//         ...product,
-//         activeClass: variant.option2,
-//         };
-//     }
-//     return product;
-//     });
-// }
+		let imageUrl;
+		let activeClass;
+		let sizeClass;
 
-// const imagesUrl = ref('');
+		if (swatchName) {
+			const variant = product.variants.find(
+				(variant) => variant.option1 === swatchName
+			);
+			imageUrl = variant?.featured_image.src;
+			activeClass = variant?.option1;
+		}
 
-// const swaImg = (item) => {
-//    // console.log(item)
-//     productStore.products.map((hand) => {
-//            // console.log(hand.variants);
-//            hand.images.map((img) => {
-//             //console.log(img.alt + ' swatch')
-//             //console.log(img.alt)
-//                 if (img.alt === item  + ' swatch') {
-//                     console.log('I M in')
-//                     console.log(img.src)
-//                     return img.src
-//                     //testImg.value = img.src;
-//                 }
-//             })
+		if (size) {
+			const variant2 = product.variants.find(
+				(variant) => variant.option2 === size
+			);
+			sizeClass = variant2?.option2;
+		}
 
-//     })
-
-//     console.log('Fired')
-// }
-
-// const props = defineProps({
-//    image: Array,
-//    name: String,
-//    price: Number,
-//    swatch: Object,
-//    size: Object
-// });
-// const swactImgURL = ref('');
-
-// const getImage = (item, swatch)  => {
-
-//     productStore.products.map((hand) => {
-//         if (hand.handle === item) {
-//            // console.log(hand.variants);
-//             hand.variants.map((img) => {
-//                 if (img.option1 === swatch) {
-//                     swactImgURL.value = img.featured_image.src;
-//                     console.log(swactImgURL.value)
-//                 }
-//             })
-//         }
-//     })
-//}
+		return {
+			...product,
+			imageUrl,
+			activeClass,
+			sizeClass,
+		};
+	});
+};
 </script>
-<style scoped>
+<style scoped lang="scss">
+
+.carousel__viewport {
+    padding: 0 30px;
+}
+
+.product {
+    overflow: hidden;
+    padding-top: 100px;
+}
+.productOne .left {
+	.carousel__slide--visible {
+        &.carousel__slide--active {
+            
+            &::before {
+                z-index: 1;
+                content: "Select";
+                position: absolute;
+                top: -4px;
+                border-bottom: 3px solid white;
+                height: 48px;
+                width: 81%;
+
+            }
+
+            &::after {
+                content: "↓";
+                position: absolute;
+                top: 18px;
+                border-bottom: 2px solid;
+                width: 100%;;
+            }
+
+            img {
+                border-left: 2px solid;
+		        border-right: 2px solid;
+            }
+	    }
+    }
+}
+
+.productTwo{
+    padding-top: 0;
+    margin-top: -5px;
+     .left {
+        .carousel__slide--visible {
+            &.carousel__slide--active {
+                
+                &::before {
+                    z-index: 1;
+                    content: "Select";
+                    position: absolute;
+                    bottom: -4px;
+                    border-top: 3px solid white;
+                    height: 48px;
+                    width: 81%;
+                    line-height: 60px;
+
+                }
+
+                &::after {
+                    content: "↑";
+                    position: absolute;
+                    bottom: 18px;
+                    border-top: 2px solid;
+                    width: 100%;;
+                }
+
+                img {
+                    border-left: 2px solid;
+                    border-right: 2px solid;
+                }
+            }
+        }
+    }
+}
 
 .box {
-    width: 50%;
+	width: 50%;
 }
+.productOne .carousel__slide {
+    padding: 40px 0 0 0 !important;
+}
+
+.productTwo .carousel__slide {
+    padding: 0 0 40px 0 !important;
+}
+
 .left {
-    float: left;
+	float: left;
 }
 
 .right {
-    float: right;
+	float: right;
 }
+
 .swatch,
 .size {
 	display: flex;
@@ -267,6 +383,7 @@ const updateImage = (productHandle, swatchName, size) => {
 	display: flex;
 	align-items: center;
 }
+
 .productSwatchImg.active img {
 	border: 2px solid;
 	padding: 2px;
