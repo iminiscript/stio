@@ -49,13 +49,14 @@
 									class="productSwatchImg"
 									@click="
 										updateImage(
+                                            products,
 											product.handle,
 											swatch,
 											null
 										)
 									"
 								>
-									<img :src="productStore.swaImg(swatch)" />
+									<img :src="getSwatchImage(products, swatch)" />
 								</span>
 							</div>
 						</div>
@@ -64,7 +65,7 @@
 								class="productSize"
 								v-for="size in product.options[1].values"
 								:class="{ active: product.sizeClass === size }"
-								@click="updateImage(product.handle, null, size)"
+								@click="updateImage(products, product.handle, null, size)"
 							>
 								<span>{{ toShortHand(size) }}</span>
 							</div>
@@ -73,83 +74,7 @@
 				</div>
 			</Slide>
 		</Carousel>
-	</div>
-
-    <div class="product productTwo">
-		<Carousel
-			id="galleryTwo"
-			:items-to-show="3"
-			:wrap-around="true"
-			v-model="currentSlideTwo"
-			class="left box"
-			:transition="500"
-		>
-			<Slide v-for="(product, index) in productsBottom" :key="product.id">
-				<img
-					:src="
-						product.imageUrl ??
-						product.variants[0].featured_image.src
-					"
-				/>
-			</Slide>
-			<template #addons>
-				<Navigation />
-			</template>
-		</Carousel>
-
-		<Carousel
-			id="thumbnailsTwo"
-			:items-to-show="1"
-			:wrap-around="true"
-			v-model="currentSlideTwo"
-			ref="carousel"
-			class="right box"
-			:transition="500"
-		>
-			<Slide v-for="(product, index) in productsBottom" :key="product.id">
-				<div class="carousel__item" @click="slideToNext(index)">
-					<div class="productRight">
-						<h2 class="productTitle">{{ product.title }}</h2>
-						<h2 class="productPrice">
-							{{ formatedPrice(product.price) }}
-						</h2>
-						<div class="swatch">
-							<div
-								class="productSwatch"
-								v-for="swatch in product.options[0].values"
-							>
-								<span
-									:class="{
-										active: product.activeClass === swatch,
-									}"
-									class="productSwatchImg"
-									@click="
-										updateImageBottom(
-											product.handle,
-											swatch,
-											null
-										)
-									"
-								>
-									<img :src="productStore.swaImgBottom(swatch)" />
-								</span>
-							</div>
-						</div>
-						<div class="size">
-							<div
-								class="productSize"
-								v-for="size in product.options[1].values"
-								:class="{ active: product.sizeClass === size }"
-								@click="updateImageBottom(product.handle, null, size)"
-							>
-								<span>{{ toShortHand(size) }}</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</Slide>
-		</Carousel>
-	</div>
+	</div> 
 </template>
 
 <script setup>
@@ -174,10 +99,9 @@ const slideToNext = (index) => {
 
 const productStore = useProductStore();
 productStore.fetchProduct();
-productStore.fetchProductBottom();
 
 const props = defineProps({
-	products: String,
+	products: Object,
     productsBottom: String,
 	image: String,
 });
@@ -200,73 +124,96 @@ const toShortHand = (size) => {
 	return sizeMappings[size] || size;
 };
 
-const updateImage = (productHandle, swatchName, size) => {
-	productStore.products = productStore.products.map((product) => {
-		if (product.handle !== productHandle) {
-			return product;
-		}
-
-		let imageUrl;
-		let activeClass;
-		let sizeClass;
-
-		if (swatchName) {
-			const variant = product.variants.find(
-				(variant) => variant.option1 === swatchName
-			);
-			imageUrl = variant?.featured_image.src;
-			activeClass = variant?.option1;
-		}
-
-		if (size) {
-			const variant2 = product.variants.find(
-				(variant) => variant.option2 === size
-			);
-			sizeClass = variant2?.option2;
-		}
-
-		return {
-			...product,
-			imageUrl,
-			activeClass,
-			sizeClass,
-		};
-	});
+const getSwatchImage = (products, item) => {
+    const product = products.find((product) => {
+        return product.images.some((image) => image.alt === `${item} swatch`);
+    });
+    return product?.images.find((image) => image.alt === `${item} swatch`)?.src || null;
 };
 
-const updateImageBottom = (productHandle, swatchName, size) => {
-	productStore.bottomProducts = productStore.bottomProducts.map((product) => {
-		if (product.handle !== productHandle) {
-			return product;
-		}
-
-		let imageUrl;
-		let activeClass;
-		let sizeClass;
-
-		if (swatchName) {
-			const variant = product.variants.find(
-				(variant) => variant.option1 === swatchName
-			);
-			imageUrl = variant?.featured_image.src;
-			activeClass = variant?.option1;
-		}
-
-		if (size) {
-			const variant2 = product.variants.find(
-				(variant) => variant.option2 === size
-			);
-			sizeClass = variant2?.option2;
-		}
-
-		return {
-			...product,
-			imageUrl,
-			activeClass,
-			sizeClass,
-		};
-	});
+const updateImage = (productsList, productHandle, swatchName, size) => {
+  // Find the product with the matching handle
+  const product = productsList.find((product) => product.handle === productHandle);
+  // Find the variant with the matching alt text
+  const variant = product.variants.find((variant) => variant.option1 === swatchName);
+  const variant2 = product.variants.find((variant) => variant.option2 === size);
+  // Check the product type
+  const dataType = product.tags.find((tag) => tag === 'mixmatch_top' || tag === 'mixmatch_bottom');
+  // Update the product properties based on the product type
+  let updatedProduct;
+  if (swatchName) {
+    updatedProduct = {
+      ...product,
+      imageUrl: variant?.featured_image.src,
+      activeClass: variant?.option1,
+    };
+  } else if (size) {
+    updatedProduct = {
+      ...product,
+      sizeClass: variant2?.option2,
+    };
+  }
+  // Update the products array based on the product type
+  if (dataType === 'mixmatch_top') {
+    productStore.products = productsList.map((product) =>
+      product.handle === productHandle ? updatedProduct : product
+    );
+  } else if (dataType === 'mixmatch_bottom') {
+    productStore.bottomProducts = productsList.map((product) =>
+      product.handle === productHandle ? updatedProduct : product
+    );
+  }
 };
+
+
+// const updateImage = (productsList, productHandle, swatchName, size) => {
+   
+//       const product = productsList.find((product) => product.handle === productHandle);
+//         console.log(product);
+//       // Find the variant with the matching alt text
+//       const variant = product.variants.find((variant) => variant.option1 === swatchName );
+//       const variant2 = product.variants.find((variant) => variant.option2 === size);
+
+//       const dataType = product.tags.find((tag) => tag === 'mixmatch_top' || tag === 'mixmatch_bottom')
+//       if (dataType === 'mixmatch_top') {
+//         productStore.products = productsList.map((product) => {
+//             if (product.handle === productHandle && swatchName) {
+//                 console.log(variant?.featured_image.src)
+//                 return {
+//                 ...product,
+//                 imageUrl: variant?.featured_image.src,
+//                 activeClass: variant?.option1,
+//             };
+//             } else if(product.handle === productHandle && size) {
+//                 console.log(variant2?.option2)
+//                 return {
+//                 ...product,
+//                 sizeClass: variant2?.option2,
+//             };
+//             }
+//             return product;
+//         });
+//     } else if (dataType === 'mixmatch_bottom') {
+//         productStore.bottomProducts = productsList.map((product) => {
+//             if (product.handle === productHandle && swatchName) {
+//                 console.log(variant?.featured_image.src)
+//                 return {
+//                 ...product,
+//                 imageUrl: variant?.featured_image.src,
+//                 activeClass: variant?.option1,
+//             };
+//             } else if(product.handle === productHandle && size) {
+//                 console.log(variant2?.option2)
+//                 return {
+//                 ...product,
+//                 sizeClass: variant2?.option2,
+//             };
+//             }
+//             return product;
+//         });
+//     }
+// };
+
 </script>
 <style scoped lang="scss">
 

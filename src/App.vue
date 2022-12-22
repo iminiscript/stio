@@ -4,7 +4,6 @@ import { ref, computed, reactive } from 'vue';
 
 const productStore = useProductStore();
 productStore.fetchProduct();
-productStore.fetchProductBottom();
 
 import ProductCard from '@/components/ProductCard.vue';
 
@@ -16,7 +15,10 @@ import CarousalCard from '@/components/Carousal.vue';
 <template>
     <ProductCard 
     :products="productStore.products"
-    :productsBottom="productStore.bottomProducts"
+    />
+
+    <ProductCard 
+    :products="productStore.bottomProducts"
     />
   
    
