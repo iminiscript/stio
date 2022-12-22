@@ -9,6 +9,8 @@ export const useProductStore = defineStore({
 	}),
 
 	actions: {
+
+		
 		async fetchProduct() {
 			const urls = [
 				"https://www.stio.com/products/mens-objective-pro-jacket?view=json",
@@ -24,31 +26,14 @@ export const useProductStore = defineStore({
 			);
 			console.log(response);
 			this.products = response;
-
-            // this.products.map(vars => {
-            //     vars.variants.reduce((set, variant) => {
-            //         const property = variant.option1;
-            //         const setItem = set[property] = set[property] || { items: [] }
-            //         setItem.items.push(variant)
-            //         if(variant.available) setItem.items.available = true
-            //         this.variants.push(set);
-            //         return set
-            //       }, {});
-            // }) 
-
-			
-			// const uniqueVars = [...new Set(this.variants)];
-			// this.unique.push(uniqueVars);
 		},
 
-		swaImg (item)  {
+		swaImg(item) {
 			const product = this.products.find((product) => {
-				return product.images.some((image) => image.alt === item + ' swatch');
+			  return product.images.some((image) => image.alt === `${item} swatch`);
 			});
-			// Return the src attribute of the matching image, or null if no match was found
-			return product ? product.images.find((image) => image.alt === item + ' swatch').src : null;
-			
-		 }
+			return product?.images.find((image) => image.alt === `${item} swatch`)?.src || null;
+		  },
 	},
 
 	getters: {

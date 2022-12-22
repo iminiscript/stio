@@ -7,33 +7,16 @@ productStore.fetchProduct();
 
 import ProductCard from '@/components/ProductCard.vue';
 
-let swactImgURL = ref('');
+import CarousalCard from '@/components/Carousal.vue';
 
-function getSwatchImg(item, swatch){
-    console.log(item);
-    console.log(swatch);
-    productStore.products.map((hand) => {
-        if (hand.handle === item) {
-            //console.log(hand.variants);
-            hand.variants.map((img) => {
-                if (img.option1 === swatch) {
-                    swactImgURL.value = img.featured_image.src;
-                    //console.log(swactImgURL)
-                }
-            })
-        }
-    })
-}
+
 </script>
 
 <template>
-  <div class="productWrapper">
     <ProductCard 
     :products="productStore.products"
-    :image="swactImgURL"
-    @getImage="getSwatchImg"
     />
-  </div>
+  
    
 </template>
 
