@@ -38,6 +38,31 @@ export const useProductStore = defineStore({
 			this.products = responseTop;
 			this.bottomProducts = responseBottom;
 		},
+
+		getSwatchImage(products, item) {
+			const product = products.find((product) => {
+			  return product.images.some((image) => image.alt === `${item} swatch`);
+			});
+			return product?.images.find((image) => image.alt === `${item} swatch`)?.src || null;
+		  },
+		  
+		  // Now you can use the getSwatchImage function like this:
+		  
+			// topSwatchImage = getSwatchImage(this.products, item);
+		  	// bottomSwatchImage = getSwatchImage(this.bottomProducts, item);
+
+		// swaImg(item) {
+		// 	const product = this.products.find((product) => {
+		// 	  return product.images.some((image) => image.alt === `${item} swatch`);
+		// 	});
+		// 	return product?.images.find((image) => image.alt === `${item} swatch`)?.src || null;
+		//   },
+		// swaImgBottom(item) {
+		// 	const product = this.bottomProducts.find((product) => {
+		// 		return product.images.some((image) => image.alt === `${item} swatch`);
+		// 	});
+		// 	return product?.images.find((image) => image.alt === `${item} swatch`)?.src || null;
+		// },
 	},
 
 	getters: {

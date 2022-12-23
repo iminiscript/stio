@@ -7,12 +7,19 @@ productStore.fetchProduct();
 
 import ProductCard from '@/components/ProductCard.vue';
 
-import CarousalCard from '@/components/Carousal.vue';
+import ProductStatic from '@/components/ProductStatic.vue';
 
 
 </script>
 
 <template>
+    <ProductStatic 
+      title="Men's Ski Kit"
+      url="https://www.stio.com/pages/build-your-kit"
+      subTitle="SHOP ALL KITS"
+    
+    />
+
     <ProductCard 
     :products="productStore.products"
     class="productOne"

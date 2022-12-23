@@ -33,10 +33,12 @@
 			<Slide v-for="(product, index) in products" :key="product.id">
 				<div class="carousel__item" @click="slideTo(index)">
 					<div class="productRight">
-						<h2 class="productTitle">{{ product.title }}</h2>
+				
+						<h2 class="productTitle">{{ product.title }}<span>→</span></h2>
 						<h2 class="productPrice">
 							{{ formatedPrice(product.price) }}
 						</h2>
+						<p class="productCopy">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sunt suscipit nostrum tempora...</p>
 						<div class="swatch">
 							<div
 								class="productSwatch"
@@ -80,6 +82,7 @@
 								<span>{{ toShortHand(size) }}</span>
 							</div>
 						</div>
+						<hr />
 					</div>
 				</div>
 			</Slide>
@@ -94,27 +97,29 @@ import ImageCard from "./ProductCard.vue";
 
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 
+import ProductStatic from './ProductStatic.vue';
+
 import "vue3-carousel/dist/carousel.css";
 
 const currentSlide = ref(0);
 const currentSlideTwo = ref(0);
 const isLoaded = ref(true);
 
-onMounted(() => {
-    // Wait until the app is fully loaded
-    console.log('Test')
-    nextTick(() => {
-    // Check that the app has finished loading
-    console.log('tested')
-    if (isLoaded.value) {
-        // Set the first variant as active
-        console.log(isLoaded.value)
-        productStore.products.value.sizeClass = productStore.products.value.options[1].values[0];
+// onMounted(() => {
+//     // Wait until the app is fully loaded
+//     console.log('Test')
+//     nextTick(() => {
+//     // Check that the app has finished loading
+//     console.log('tested')
+//     if (isLoaded.value) {
+//         // Set the first variant as active
+//         console.log(isLoaded.value)
+//         productStore.products.value.sizeClass = productStore.products.value.options[1].values[0];
 
         
-    }
-});
-});
+//     }
+// });
+// });
 
 
 const slideTo = (index) => {
@@ -270,19 +275,40 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
     .carousel__viewport {
 	    padding: 40px 0 0 0;
     }
+	.right {
+		padding-top: 140px;
+	}
+}
+
+hr {
+	border: 0;
+    border-top: 3px solid #eee;
+    display: block;
+    margin: 30px 0 0;
+    padding: 0;
+    text-align: left;
+    z-index: 9;
+	top: 10px;
+}
+
+.productTwo {
+	.right {
+		margin-top: -24px;
+	}
 }
 
 .productRight {
-    width: 100%;
+    width: 85%;
+	text-align: left;
 }
 .product {
 	overflow: hidden;
-	padding-top: 100px;
 }
 .productOne .left {
 	.carousel__slide--visible {
 		&.carousel__slide--active {
 			&::before {
+				display: none;
 				z-index: 1;
 				content: "Select";
 				position: absolute;
@@ -293,6 +319,7 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 			}
 
 			&::after {
+				display: none;
 				content: "↓";
 				position: absolute;
 				top: 18px;
@@ -301,11 +328,30 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 			}
 
 			img {
-				border-left: 2px solid;
-				border-right: 2px solid;
+				// border-left: 2px solid;
+				// border-right: 2px solid;
+
 			}
 		}
 	}
+}
+
+.productTitle {
+	font-size: 22px;
+	font-weight: 600;
+
+	span {
+		padding-left: 10px;
+	}
+}
+
+.productCopy {
+	font-size: 14px;
+	margin-bottom: 10px;
+}
+
+.carousel__slide {
+	justify-content: left;
 }
 
 .productTwo {
@@ -315,6 +361,7 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 		.carousel__slide--visible {
 			&.carousel__slide--active {
 				&::before {
+					display: none;
 					z-index: 1;
 					content: "Select";
 					position: absolute;
@@ -326,6 +373,7 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 				}
 
 				&::after {
+					display: none;
 					content: "↑";
 					position: absolute;
 					bottom: 18px;
@@ -334,18 +382,28 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 				}
 
 				img {
-					border-left: 2px solid;
-					border-right: 2px solid;
+					
 				}
 			}
 		}
 	}
 }
 
-.box {
-	width: 50%;
+.productPrice {
+	font-size: 16px;
+	margin: 5px 0;
 }
-.productOne .carousel__slide {
+
+.left {
+	width: 65%;
+}
+.right {
+	width: calc(35% - 40px);
+	background-color: #f8f8f8;
+    padding-bottom: 40px;
+    padding-left: 40px;
+}
+.productOne .left .carousel__slide {
 	padding: 40px 0 0 0 !important;
 }
 
@@ -383,9 +441,15 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 .size {
 	display: flex;
 	flex-flow: row wrap;
+	margin-bottom: 15px;
 }
 
-.productSwatchImg img,
+.productSwatchImg img {
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	margin: 0px 0 0 3px;
+}
 .productSize {
 	width: 30px;
 	height: 30px;
@@ -393,20 +457,21 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 }
 
 .productSwatchImg {
-	width: 34px;
-	height: 34px;
+	width: 30px;
+	height: 30px;
 	display: flex;
 	align-items: center;
+	border: 1px solid transparent;
+	border-radius: 50%;
 }
 
-.productSwatchImg.active img {
-	border: 2px solid;
-	padding: 2px;
+.productSwatchImg.active {
+	border: 1px solid;
 }
 
 .productSwatch,
 .productSize {
-	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .productSize {
