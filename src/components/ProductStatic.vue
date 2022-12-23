@@ -126,7 +126,7 @@ hr {
     position: absolute;
     border: 2px solid #eee;
     z-index: 9;
-    height: 725px;
+    height: 575px;
     left: 0;
     right: 0;
     margin: auto;

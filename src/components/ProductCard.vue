@@ -291,6 +291,13 @@ hr {
 	top: 10px;
 }
 
+.left {
+	img {
+		max-width: 80%;
+		height: auto;
+	}
+}
+
 .productTwo {
 	.right {
 		margin-top: -24px;
@@ -301,41 +308,6 @@ hr {
     width: 85%;
 	text-align: left;
 }
-.product {
-	overflow: hidden;
-}
-.productOne .left {
-	.carousel__slide--visible {
-		&.carousel__slide--active {
-			&::before {
-				display: none;
-				z-index: 1;
-				content: "Select";
-				position: absolute;
-				top: -4px;
-				border-bottom: 3px solid white;
-				height: 48px;
-				width: 81%;
-			}
-
-			&::after {
-				display: none;
-				content: "↓";
-				position: absolute;
-				top: 18px;
-				border-bottom: 2px solid;
-				width: 100%;
-			}
-
-			img {
-				// border-left: 2px solid;
-				// border-right: 2px solid;
-
-			}
-		}
-	}
-}
-
 .productTitle {
 	font-size: 22px;
 	font-weight: 600;
@@ -351,42 +323,12 @@ hr {
 }
 
 .carousel__slide {
-	justify-content: left;
+	justify-content: center;
 }
 
 .productTwo {
 	padding-top: 0;
 	margin-top: -5px;
-	.left {
-		.carousel__slide--visible {
-			&.carousel__slide--active {
-				&::before {
-					display: none;
-					z-index: 1;
-					content: "Select";
-					position: absolute;
-					bottom: -4px;
-					border-top: 3px solid white;
-					height: 48px;
-					width: 81%;
-					line-height: 60px;
-				}
-
-				&::after {
-					display: none;
-					content: "↑";
-					position: absolute;
-					bottom: 18px;
-					border-top: 2px solid;
-					width: 100%;
-				}
-
-				img {
-					
-				}
-			}
-		}
-	}
 }
 
 .productPrice {
