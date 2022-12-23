@@ -66,7 +66,8 @@
 							<div
 								class="productSize"
 								v-for="size in product.options[1].values"
-								:class="{ active: product.sizeClass === size  }"
+								:class="{ active: product.sizeClass === size, disable: !checkInventory(products, product.handle, size)  }"
+								
 								@click="
 									updateImage(
 										products,
@@ -88,7 +89,7 @@
 
 <script setup>
 import { useProductStore } from "@/stores/productStore.js";
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive, onMounted, nextTick } from "vue";
 import ImageCard from "./ProductCard.vue";
 
 import { Carousel, Slide, Navigation } from "vue3-carousel";
@@ -97,6 +98,24 @@ import "vue3-carousel/dist/carousel.css";
 
 const currentSlide = ref(0);
 const currentSlideTwo = ref(0);
+const isLoaded = ref(true);
+
+onMounted(() => {
+    // Wait until the app is fully loaded
+    console.log('Test')
+    nextTick(() => {
+    // Check that the app has finished loading
+    console.log('tested')
+    if (isLoaded.value) {
+        // Set the first variant as active
+        console.log(isLoaded.value)
+        productStore.products.value.sizeClass = productStore.products.value.options[1].values[0];
+
+        
+    }
+});
+});
+
 
 const slideTo = (index) => {
 	currentSlideTwo.value = index;
@@ -133,7 +152,15 @@ const toShortHand = (size) => {
 	return sizeMappings[size] || size;
 };
 
-
+const checkInventory = ((products, productHandle, size) => {
+	const product = products.find(
+		(product) => product.handle === productHandle
+	);
+	const variant2 = product.variants.find(
+		(variant) => variant.option2 === size
+	);
+	return variant2.inventory_quantity
+})
 
 const getSwatchImage = (products, item) => {
 	const product = products.find((product) => {
@@ -332,6 +359,24 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
 
 .right {
 	float: right;
+}
+
+.disable {
+	&::before{
+		background-color: #414042;
+		border: none;
+		content: "";
+		height: 1px;
+		left: -1px;
+		position: absolute;
+		top: 14px;
+		transform: rotate(130deg);
+		width: 29px;
+	}
+
+	span {
+		opacity: 0.2;
+	}
 }
 
 .swatch,
