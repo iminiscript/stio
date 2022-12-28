@@ -91,184 +91,121 @@
 </template>
 
 <script setup>
-import { useProductStore } from "@/stores/productStore.js";
-import { ref, computed, reactive, onMounted, nextTick } from "vue";
-import ImageCard from "./ProductCard.vue";
+	import { useProductStore } from "@/stores/productStore.js";
+	import { ref, computed, reactive, onMounted, nextTick } from "vue";
+	import ImageCard from "./ProductCard.vue";
+	import { Carousel, Slide, Navigation } from "vue3-carousel";
 
-import { Carousel, Slide, Navigation } from "vue3-carousel";
+	import ProductStatic from './ProductStatic.vue';
 
-import ProductStatic from './ProductStatic.vue';
+	import "vue3-carousel/dist/carousel.css";
 
-import "vue3-carousel/dist/carousel.css";
+	const productStore = useProductStore();
 
-const currentSlide = ref(0);
-const currentSlideTwo = ref(0);
-const isLoaded = ref(true);
+	productStore.fetchProduct();
 
-// onMounted(() => {
-//     // Wait until the app is fully loaded
-//     console.log('Test')
-//     nextTick(() => {
-//     // Check that the app has finished loading
-//     console.log('tested')
-//     if (isLoaded.value) {
-//         // Set the first variant as active
-//         console.log(isLoaded.value)
-//         productStore.products.value.sizeClass = productStore.products.value.options[1].values[0];
+	const currentSlide = ref(0);
+	const currentSlideTwo = ref(0);
+	const isLoaded = ref(true);
 
-        
-//     }
-// });
-// });
-
-
-const slideTo = (index) => {
-	currentSlideTwo.value = index;
-};
-
-const slideToNext = (index) => {
-	currentSlideTwo.value = index;
-};
-
-const productStore = useProductStore();
-productStore.fetchProduct();
-
-const props = defineProps({
-	products: Object,
-	productsBottom: String,
-	image: String,
-});
-
-const formatedPrice = (price) => {
-	return "$" + (price / 100).toLocaleString();
-};
-
-const sizeMappings = {
-	"Extra Small": "XS",
-	"Small": "S",
-	"Medium": "M",
-	"Large": "L",
-	"Extra Large": "XL",
-	"Extra Extra Large": "XXL",
-	"Extra Extra Extra Large": "XXXL",
-};
-
-const toShortHand = (size) => {
-	return sizeMappings[size] || size;
-};
-
-const checkInventory = ((products, productHandle, size) => {
-	const product = products.find(
-		(product) => product.handle === productHandle
-	);
-	const variant2 = product.variants.find(
-		(variant) => variant.option2 === size
-	);
-	return variant2.inventory_quantity
-})
-
-const getSwatchImage = (products, item) => {
-	const product = products.find((product) => {
-		return product.images.some((image) => image.alt === `${item} swatch`);
+	const props = defineProps({
+		products: Object,
+		productsBottom: String,
+		image: String,
 	});
-	return (
-		product?.images.find((image) => image.alt === `${item} swatch`)?.src ||
-		null
-	);
-};
 
-const updateImage = (productsList, productHandle, swatchName, size) => {
-	// Find the product with the matching handle
-	const product = productsList.find(
-		(product) => product.handle === productHandle
-	);
-	// Find the variant with the matching alt text
-	const variant = product.variants.find(
-		(variant) => variant.option1 === swatchName
-	);
-	const variant2 = product.variants.find(
-		(variant) => variant.option2 === size
-	);
+	const slideTo = (index) => {
+		currentSlideTwo.value = index;
+	};
 
-    console.log(variant2)
-	// Check the product type
-	const dataType = product.tags.find(
-		(tag) => tag === "mixmatch_top" || tag === "mixmatch_bottom"
-	);
-	// Update the product properties based on the product type
-	let updatedProduct;
-	if (swatchName) {
-		updatedProduct = {
-			...product,
-			imageUrl: variant?.featured_image.src,
-			activeClass: variant?.option1,
-		};
-	} else if (size) {
-		updatedProduct = {
-			...product,
-			sizeClass: variant2?.option2,
-		};
-	}
-	// Update the products array based on the product type
-	if (dataType === "mixmatch_top") {
-		productStore.products = productsList.map((product) =>
-			product.handle === productHandle ? updatedProduct : product
+	const slideToNext = (index) => {
+		currentSlideTwo.value = index;
+	};
+
+	const formatedPrice = (price) => {
+		return "$" + (price / 100).toLocaleString();
+	};
+
+	const sizeMappings = {
+		"Extra Small": "XS",
+		"Small": "S",
+		"Medium": "M",
+		"Large": "L",
+		"Extra Large": "XL",
+		"Extra Extra Large": "XXL",
+		"Extra Extra Extra Large": "XXXL",
+	};
+
+	const toShortHand = (size) => {
+		return sizeMappings[size] || size;
+	};
+
+	const checkInventory = ((products, productHandle, size) => {
+		const product = products.find(
+			(product) => product.handle === productHandle
 		);
-	} else if (dataType === "mixmatch_bottom") {
-		productStore.bottomProducts = productsList.map((product) =>
-			product.handle === productHandle ? updatedProduct : product
+		const variant2 = product.variants.find(
+			(variant) => variant.option2 === size
 		);
-	}
-};
+		return variant2.inventory_quantity
+	});
 
-// const updateImage = (productsList, productHandle, swatchName, size) => {
+	const getSwatchImage = (products, item) => {
+		const product = products.find((product) => {
+			return product.images.some((image) => image.alt === `${item} swatch`);
+		});
+		return (
+			product?.images.find((image) => image.alt === `${item} swatch`)?.src ||
+			null
+		);
+	};
 
-//       const product = productsList.find((product) => product.handle === productHandle);
-//         console.log(product);
-//       // Find the variant with the matching alt text
-//       const variant = product.variants.find((variant) => variant.option1 === swatchName );
-//       const variant2 = product.variants.find((variant) => variant.option2 === size);
+	const updateImage = (productsList, productHandle, swatchName, size) => {
+		// Find the product with the matching handle
+		const product = productsList.find(
+			(product) => product.handle === productHandle
+		);
+		// Find the variant with the matching alt text
+		const variant = product.variants.find(
+			(variant) => variant.option1 === swatchName
+		);
+		const variant2 = product.variants.find(
+			(variant) => variant.option2 === size
+		);
 
-//       const dataType = product.tags.find((tag) => tag === 'mixmatch_top' || tag === 'mixmatch_bottom')
-//       if (dataType === 'mixmatch_top') {
-//         productStore.products = productsList.map((product) => {
-//             if (product.handle === productHandle && swatchName) {
-//                 console.log(variant?.featured_image.src)
-//                 return {
-//                 ...product,
-//                 imageUrl: variant?.featured_image.src,
-//                 activeClass: variant?.option1,
-//             };
-//             } else if(product.handle === productHandle && size) {
-//                 console.log(variant2?.option2)
-//                 return {
-//                 ...product,
-//                 sizeClass: variant2?.option2,
-//             };
-//             }
-//             return product;
-//         });
-//     } else if (dataType === 'mixmatch_bottom') {
-//         productStore.bottomProducts = productsList.map((product) => {
-//             if (product.handle === productHandle && swatchName) {
-//                 console.log(variant?.featured_image.src)
-//                 return {
-//                 ...product,
-//                 imageUrl: variant?.featured_image.src,
-//                 activeClass: variant?.option1,
-//             };
-//             } else if(product.handle === productHandle && size) {
-//                 console.log(variant2?.option2)
-//                 return {
-//                 ...product,
-//                 sizeClass: variant2?.option2,
-//             };
-//             }
-//             return product;
-//         });
-//     }
-// };
+		console.log(variant2)
+		// Check the product type
+		const dataType = product.tags.find(
+			(tag) => tag === "mixmatch_top" || tag === "mixmatch_bottom"
+		);
+		// Update the product properties based on the product type
+		let updatedProduct;
+		if (swatchName) {
+			updatedProduct = {
+				...product,
+				imageUrl: variant?.featured_image.src,
+				activeClass: variant?.option1,
+			};
+		} else if (size) {
+			updatedProduct = {
+				...product,
+				sizeClass: variant2?.option2,
+			};
+		}
+		// Update the products array based on the product type
+		if (dataType === "mixmatch_top") {
+			productStore.products = productsList.map((product) =>
+				product.handle === productHandle ? updatedProduct : product
+			);
+		} else if (dataType === "mixmatch_bottom") {
+			productStore.bottomProducts = productsList.map((product) =>
+				product.handle === productHandle ? updatedProduct : product
+			);
+		};
+	};
+
 </script>
+
 <style scoped lang="scss">
 
 .productOne {
