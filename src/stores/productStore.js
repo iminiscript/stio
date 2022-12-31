@@ -5,6 +5,8 @@ export const useProductStore = defineStore({
 	state: () => ({
 		products: {},
 		bottomProducts: {},
+		mobileSlider: 'close',
+		backGround: '',
 	}),
 
 	actions: {
@@ -38,6 +40,24 @@ export const useProductStore = defineStore({
 			
 			this.products = responseTop;
 			this.bottomProducts = responseBottom;
+		},
+
+		appendBackGround() {
+
+		},
+
+		openCartDrawer() {
+
+
+			if (this.mobileSlider === "open") {
+				this.mobileSlider = "close";
+				this.backGround = ""
+
+
+			} else {
+				this.mobileSlider = "open";
+				this.backGround = "open";
+			}
 		},
 	},
 });

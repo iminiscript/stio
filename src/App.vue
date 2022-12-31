@@ -9,6 +9,9 @@ import ProductCard from '@/components/ProductCard.vue';
 
 import ProductStatic from '@/components/ProductStatic.vue';
 
+import ProductHelper from '@/components/ProductHelper.vue'
+
+
 
 </script>
 
@@ -29,11 +32,13 @@ import ProductStatic from '@/components/ProductStatic.vue';
     :products="productStore.bottomProducts"
     class="productTwo"
     />
-  
+
+     <ProductHelper /> 
    
 </template>
 
-<style>
+<style lang="scss">
+
 .productWrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
