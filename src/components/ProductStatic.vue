@@ -25,16 +25,25 @@
         display: flex;
         justify-content: space-between;
         position: relative;
+        @media (max-width: 640px){
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
     }
 
     .productTitle {
-        line-height: 1.2;
+        margin-top: 15px;
         margin-bottom: 10px;
-        margin-top: 30px;
-        // text-align: left;
         font-size: 2.1875rem;
         letter-spacing: 0;
         font-weight: 700;
+        line-height: 1.2;
+
+        @media (min-width: 1024px) {
+            margin-top: 30px;
+        }
     }
     .productLink {
         font-size: 0.875rem;

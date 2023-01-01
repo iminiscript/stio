@@ -14,10 +14,10 @@ export const useProductStore = defineStore({
 			
 			const urlsTop = [
 				"https://www.stio.com/products/mens-objective-pro-jacket?view=json",
-				 "https://www.stio.com/products/mens-environ-jacket?view=json",
-				"https://www.stio.com/products/mens-environ-xt-jacket?view=json",
-                "https://www.stio.com/products/mens-shot-7-down-jacket?view=json",
-                "https://www.stio.com/products/mens-doublecharge-insulated-jacket?view=json",
+				"https://www.stio.com/products/mens-environ-jacket?view=json",
+				//"https://www.stio.com/products/mens-environ-xt-jacket?view=json",
+				"https://www.stio.com/products/mens-shot-7-down-jacket?view=json",
+				"https://www.stio.com/products/mens-doublecharge-insulated-jacket?view=json",
                 "https://www.stio.com/products/raymer-jacket?view=json",
                 "https://www.stio.com/products/mens-raymer-jacket?view=json",   
 			];
@@ -41,11 +41,6 @@ export const useProductStore = defineStore({
 			this.products = responseTop;
 			this.bottomProducts = responseBottom;
 		},
-
-		appendBackGround() {
-
-		},
-
 		openCartDrawer() {
 
 
@@ -56,7 +51,8 @@ export const useProductStore = defineStore({
 
 			} else {
 				this.mobileSlider = "open";
-				this.backGround = "open";
+				this.backGround = "open"
+
 			}
 		},
 	},
