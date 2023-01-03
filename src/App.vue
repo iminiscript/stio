@@ -11,17 +11,13 @@ import ProductStatic from '@/components/ProductStatic.vue';
 
 import ProductHelper from '@/components/ProductHelper.vue'
 
-import ProductTest from '@/components/ProductTest.vue'
 
 
 
 </script>
 
 <template>
-<!-- <ProductTest 
-      :products="productStore.products"
-    
-    /> -->
+
   <div v-if="productStore.isLoading" class="loader">
     <img src="@/assets/lazyLoader.gif" alt="Loading" />
   </div>

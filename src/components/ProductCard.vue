@@ -68,7 +68,7 @@
                 class="productSize"
                 v-for="size in product.options[1].values"
               >
-                <span>{{ toShortHand(size) }}</span>
+                <span>{{ toShortHandSize(size) }}</span>
               </div>
             </div>
             <hr />
@@ -81,12 +81,8 @@
 
 <script setup>
 import { useProductStore } from "@/stores/productStore.js";
-import { ref, computed, reactive, onMounted, nextTick, watch } from "vue";
-import ImageCard from "./ProductCard.vue";
+import { ref, computed} from "vue";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
-
-import ProductStatic from "./ProductStatic.vue";
-
 import "vue3-carousel/dist/carousel.css";
 
 const productStore = useProductStore();
@@ -101,6 +97,7 @@ const props = defineProps({
 
 const currentSlide = ref(0);
 const currentSlideTwo = ref(0);
+
 const slideTo = (index) => {
   currentSlideTwo.value = index;
 };
@@ -119,7 +116,7 @@ const imgBrkpoints = ref({
   },
 });
 
-const state = reactive({ count: 0 });
+
 const formatedPrice = (price) => {
   return "$" + (price / 100).toLocaleString();
 };
@@ -134,7 +131,7 @@ const sizeMappings = {
   "Extra Extra Extra Large": "XXXL",
 };
 
-const toShortHand = (size) => {
+const toShortHandSize = (size) => {
   return sizeMappings[size] || size;
 };
 
@@ -188,22 +185,6 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
     (variant) => variant.option1 === swatchName
   );
   const variant2 = product.variants.find((variant) => variant.option2 === size);
-
-  // const filteredSizes = product.variants.filter((variant) => variant.option1 === swatchName);
-	// console.log(filteredSizes);
-
-  // const inventory = filteredSizes.map( (item) => item.inventory_quantity)
-
-
-  // const filteredSizes = product.variants.filter((variant) => variant.option1 === swatchName).map((variant) => variant.option2);
-  
-  // console.log(filteredSizes)
-
-  //console.log(product.options[1].values)
-
-  //product.options[1].values = filteredSizes.map((variant) => variant.option2);
-
-  //console.log(product.options[1].values)
 
   const dataType = product.tags.find(
     (tag) => tag === "mixmatch_top" || tag === "mixmatch_bottom"
