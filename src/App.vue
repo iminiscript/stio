@@ -16,6 +16,10 @@ import ProductHelper from '@/components/ProductHelper.vue'
 </script>
 
 <template>
+  <div v-if="productStore.isLoading" class="loader">
+    <img src="@/assets/lazyLoader.gif" alt="Loading" />
+  </div>
+  <div v-else>
     <ProductStatic 
       title="Men's Ski Kit"
       url="https://www.stio.com/pages/build-your-kit"
@@ -34,6 +38,7 @@ import ProductHelper from '@/components/ProductHelper.vue'
     />
 
      <ProductHelper /> 
+  </div>
    
 </template>
 
@@ -47,4 +52,11 @@ import ProductHelper from '@/components/ProductHelper.vue'
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+.loader {
+    display: flex;
+    justify-content: center;
+}
+
+
+
 </style>

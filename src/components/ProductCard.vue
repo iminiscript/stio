@@ -47,9 +47,7 @@
                 v-for="swatch in product.options[0].values"
               >
                 <span
-									
                   :class="{ active: product.activeClass === swatch }, firstVariant(product, swatch, null)"
-
 
                   @click="updateImage(products, product.handle, swatch, null)"
                   class="productSwatchImg"
@@ -83,7 +81,7 @@
 
 <script setup>
 import { useProductStore } from "@/stores/productStore.js";
-import { ref, computed, reactive, onMounted, nextTick } from "vue";
+import { ref, computed, reactive, onMounted, nextTick, watch } from "vue";
 import ImageCard from "./ProductCard.vue";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 
@@ -94,8 +92,6 @@ import "vue3-carousel/dist/carousel.css";
 const productStore = useProductStore();
 
 productStore.fetchProduct();
-
-const isLoaded = ref(true);
 
 const props = defineProps({
   products: Object,
@@ -176,11 +172,7 @@ const getSwatchImage =  (products, item) => {
   
 };
 
-const firstVariant = (product, swatch, size) => {
-	const productSwatch = product.first_variant.option1 === swatch;
-	const productSize = product.first_variant.option2 === size;
-	return productSwatch || productSize ? 'active' : '';
-}
+
 
 // const getSwatchImage =  (products, item) => {
 //   const productsWithSwatch = products.filter((product) => {
@@ -211,6 +203,27 @@ const firstVariant = (product, swatch, size) => {
 // 		console.log(product)
 // })
 
+
+// const firstVariant = (product, swatch, size) => {
+// 	const productSwatch = product.first_variant.option1 === swatch;
+// 	const productSize = product.first_variant.option2 === size;
+// 	return (productSwatch || productSize) && !state.active ? 'active' : '';
+
+// }
+
+const firstVariant = (product, swatch, size) => {
+  // Check if the activeClass property is already set
+  if (product.activeClass || product.sizeClass) {
+    return '';
+  }
+  // Set the activeClass property to the first available variant for swatch
+  product.activeClass = product.first_variant.option1;
+  // Set the sizeClass property to the first available variant for size
+  product.sizeClass = product.first_variant.option2;
+  // Return 'active'
+  return 'active';
+}
+
 const updateImage = (productsList, productHandle, swatchName, size) => {
   // Find the product with the matching handle
 	
@@ -219,8 +232,7 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
   );
 
 	// Reset the activeClass and sizeClass properties
-  product.activeClass = null;
-  product.sizeClass = null;
+
 
   // Find the variant with the matching alt text
   const variant = product.variants.find(
@@ -259,6 +271,7 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
     );
   }
 };
+
 </script>
 
 <style lang="scss" scoped>

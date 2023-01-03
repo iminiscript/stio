@@ -7,6 +7,7 @@ export const useProductStore = defineStore({
 		bottomProducts: {},
 		mobileSlider: 'close',
 		backGround: '',
+		isLoading: true,
 	}),
 
 	actions: {
@@ -40,14 +41,13 @@ export const useProductStore = defineStore({
 			
 			this.products = responseTop;
 			this.bottomProducts = responseBottom;
+			this.isLoading = false;
 		},
 		openCartDrawer() {
-
 
 			if (this.mobileSlider === "open") {
 				this.mobileSlider = "close";
 				this.backGround = ""
-
 
 			} else {
 				this.mobileSlider = "open";
