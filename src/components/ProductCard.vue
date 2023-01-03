@@ -192,7 +192,7 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
   // const filteredSizes = product.variants.filter((variant) => variant.option1 === swatchName);
 	// console.log(filteredSizes);
 
-  const inventory = filteredSizes.map( (item) => item.inventory_quantity)
+  // const inventory = filteredSizes.map( (item) => item.inventory_quantity)
 
 
   // const filteredSizes = product.variants.filter((variant) => variant.option1 === swatchName).map((variant) => variant.option2);
