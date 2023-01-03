@@ -11,16 +11,23 @@ import ProductStatic from '@/components/ProductStatic.vue';
 
 import ProductHelper from '@/components/ProductHelper.vue'
 
+import ProductTest from '@/components/ProductTest.vue'
+
 
 
 </script>
 
 <template>
+<!-- <ProductTest 
+      :products="productStore.products"
+    
+    /> -->
   <div v-if="productStore.isLoading" class="loader">
     <img src="@/assets/lazyLoader.gif" alt="Loading" />
   </div>
   <div v-else>
-    <ProductStatic 
+
+     <ProductStatic 
       title="Men's Ski Kit"
       url="https://www.stio.com/pages/build-your-kit"
       subTitle="SHOP ALL KITS"
@@ -37,7 +44,7 @@ import ProductHelper from '@/components/ProductHelper.vue'
     class="productTwo"
     />
 
-     <ProductHelper /> 
+     <ProductHelper />  
   </div>
    
 </template>

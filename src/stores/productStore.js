@@ -1,5 +1,9 @@
 import { defineStore } from "pinia";
 
+const { VITE_API_URL, VITE_API_URL_BOTTOM, VITE_API_URL_TEST_TOP, VITE_API_URL_TEST_BOT } = import.meta.env
+
+
+
 export const useProductStore = defineStore({
 	id: "productStore",
 	state: () => ({
@@ -12,31 +16,17 @@ export const useProductStore = defineStore({
 
 	actions: {
 		async fetchProduct() {
-			
-			const urlsTop = [
-				"https://www.stio.com/products/mens-objective-pro-jacket?view=json",
-				"https://www.stio.com/products/mens-environ-jacket?view=json",
-				//"https://www.stio.com/products/mens-environ-xt-jacket?view=json",
-				"https://www.stio.com/products/mens-shot-7-down-jacket?view=json",
-				"https://www.stio.com/products/mens-doublecharge-insulated-jacket?view=json",
-                "https://www.stio.com/products/raymer-jacket?view=json",
-                "https://www.stio.com/products/mens-raymer-jacket?view=json",   
-			];
-			const urlsBottom = [
-				"https://www.stio.com/products/mens-objective-pro-bib?view=json",
-				"https://www.stio.com/products/mens-environ-bib?view=json",
-				"https://www.stio.com/products/mens-environ-pant?view=json",
-				"https://www.stio.com/products/mens-raymer-pant?view=json",
-				"https://www.stio.com/products/mens-doublecharge-insulated-pant?view=json",
-				"https://www.stio.com/products/mens-upslope-touring-pant?view=json",
-				"https://www.stio.com/products/mens-fernos-insulated-knicker?view=json",
-			];
+
+			const topUrls = VITE_API_URL.split(",");
+
+			const bottomUrls = VITE_API_URL_BOTTOM.split(",")
+
 			const responseTop = await Promise.all(
-				urlsTop.map((url) => fetch(url).then((res) => res.json()))
+				topUrls.map((url) => fetch(url).then((res) => res.json()))
 			);
 
 			const responseBottom = await Promise.all(
-				urlsBottom.map((url) => fetch(url).then((res) => res.json()))
+				bottomUrls.map((url) => fetch(url).then((res) => res.json()))
 			);
 			
 			this.products = responseTop;
