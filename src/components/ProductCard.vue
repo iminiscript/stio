@@ -119,19 +119,6 @@ const imgBrkpoints = ref({
   },
 });
 
-
-// const activeClass = ref([]);
-// const sizeClass = ref([]);
-
-// onMounted(() => {
-//   // Add active class to first swatch
-//   console.log(productStore.products);
-//   //activeClass.value = productStore.products.map(product => product.options[0].values[0])
-
-//   // Add active class to first size
-//   // sizeClass.value = productStore.products.map(product => product.options[1].values[0])
-// });
-
 const state = reactive({ count: 0 });
 const formatedPrice = (price) => {
   return "$" + (price / 100).toLocaleString();
@@ -157,11 +144,6 @@ const checkInventory = (products, productHandle, size) => {
   return variant2.inventory_quantity;
 };
 
-//console.log(productStore.products)
-
-
-//const activeClass = ref();
-
 const getSwatchImage =  (products, item) => {
   const product = products.find((product) => {
     	return product.images.some((image) => image.alt === `${item} swatch`);
@@ -171,45 +153,6 @@ const getSwatchImage =  (products, item) => {
 	}
   
 };
-
-
-
-// const getSwatchImage =  (products, item) => {
-//   const productsWithSwatch = products.filter((product) => {
-//     return product.images.some((image) => image.alt === `${item} swatch`);
-//   });
-
-// 	console.log(productsWithSwatch)
-
-//   return productsWithSwatch.map((product) => {
-//     return product?.images.find((image) => image.alt === `${item} swatch`)?.src ?? null;
-//   });
-// };
-
-
-
-// const firstVariant = (product, swatch) => {
-//   // const swatchOption = product.first_variant.option1;
-//   // const sizeOption = product.first_variant.option2;
-//   // if (swatchOption === swatch) {
-//   //   return activeClass.value = swatch;
-//   // }
-//   return '';
-// };
-
-// const firstVariant = (product, swatch) => computed(() => {
-// 		const swatchOption = product.first_variant.option1;
-// 		const sizeOption = product.first_variant.option2;
-// 		console.log(product)
-// })
-
-
-// const firstVariant = (product, swatch, size) => {
-// 	const productSwatch = product.first_variant.option1 === swatch;
-// 	const productSize = product.first_variant.option2 === size;
-// 	return (productSwatch || productSize) && !state.active ? 'active' : '';
-
-// }
 
 const firstVariant = (product, swatch, size) => {
   // Check if the activeClass property is already set
@@ -231,17 +174,11 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
     (product) => product.handle === productHandle
   );
 
-	// Reset the activeClass and sizeClass properties
-
-
   // Find the variant with the matching alt text
   const variant = product.variants.find(
     (variant) => variant.option1 === swatchName
   );
   const variant2 = product.variants.find((variant) => variant.option2 === size);
-
-  //console.log(productsList);
-  // Check the product type
 	
   const dataType = product.tags.find(
     (tag) => tag === "mixmatch_top" || tag === "mixmatch_bottom"
