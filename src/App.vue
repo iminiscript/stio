@@ -7,9 +7,9 @@ productStore.fetchProduct();
 
 import ProductCard from '@/components/ProductCard.vue';
 
-import ProductStatic from '@/components/ProductStatic.vue';
+import ProductBorder from '@/components/ProductBorder.vue';
 
-import ProductHelper from '@/components/ProductHelper.vue'
+import ProductMobileDrawer from '@/components/ProductMobileDrawer.vue'
 
 
 
@@ -23,7 +23,7 @@ import ProductHelper from '@/components/ProductHelper.vue'
   </div>
   <div v-else>
 
-     <ProductStatic 
+     <ProductBorder 
       title="Men's Ski Kit"
       url="https://www.stio.com/pages/build-your-kit"
       subTitle="SHOP ALL KITS"
@@ -40,7 +40,7 @@ import ProductHelper from '@/components/ProductHelper.vue'
     class="productTwo"
     />
 
-     <ProductHelper />  
+     <ProductMobileDrawer />  
   </div>
    
 </template>

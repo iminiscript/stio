@@ -5,7 +5,7 @@
       :wrap-around="true"
       :settings="imgSettings"
       :breakpoints="imgBrkpoints"
-      class="left box"
+      class="productLeft productBox"
       id="gallery"
       v-model="currentSlide"
     >
@@ -25,13 +25,13 @@
       :transition="500"
       :wrap-around="true"
       id="thumbnails"
-      class="right box"
+      class="productRight productBox"
       :class="productStore.mobileSlider"
       ref="carousel"
     >
       <Slide v-for="(product, index) in products" :key="product.id">
         <div @click="slideTo(index)" class="carousel__item">
-          <div class="productRight">
+          <div class="productRightContent">
             <h2 class="productTitle">{{ product.title }}<span>→</span></h2>
             <h2 class="productPrice">
               {{ formatedPrice(product.price) }}
@@ -47,9 +47,9 @@
                 v-for="swatch in product.options[0].values"
               >
                 <span
-                  :class="{ active: product.activeClass === swatch }, firstVariant(product, swatch, null)"
+                  :class="{ active: product.activeClass === swatch }, firstAvailableVariant(product, swatch, null)"
 
-                  @click="updateImage(products, product.handle, swatch, null)"
+                  @click="getUpdatedSwatchSize(products, product.handle, swatch, null)"
                   class="productSwatchImg"
                 >
                   <img :src="getSwatchImage(products, swatch).imgSrc" />
@@ -62,9 +62,9 @@
                 :class="{
                   active: product.sizeClass === size,
                   disable: !checkInventory(product, product.handle, size, product.activeClass),
-                }, firstVariant(product, null, size)"
+                }, firstAvailableVariant(product, null, size)"
                 :key="size"
-                @click="updateImage(products, product.handle, null, size)"
+                @click="getUpdatedSwatchSize(products, product.handle, null, size)"
                 class="productSize"
                 v-for="size in product.options[1].values"
               >
@@ -158,7 +158,7 @@ const getSwatchImage =  (products, item) => {
   
 };
 
-const firstVariant = (product, swatch, size) => {
+const firstAvailableVariant = (product, swatch, size) => {
   // Check if the activeClass property is already set
   if (product.activeClass || product.sizeClass) {
     return '';
@@ -173,7 +173,7 @@ const firstVariant = (product, swatch, size) => {
 
 
 
-const updateImage = (productsList, productHandle, swatchName, size) => {
+const getUpdatedSwatchSize = (productsList, productHandle, swatchName, size) => {
   // Find the product with the matching handle
 	
 	const product = productsList.find(
@@ -225,13 +225,13 @@ const updateImage = (productsList, productHandle, swatchName, size) => {
   .carousel__viewport {
     padding: 40px 0 0;
   }
-  .right {
+  .productRight {
     @media (min-width: 1024px) {
       padding-top: 140px;
     }
   }
 
-  .left {
+  .productLeft {
     @media (max-width: 640px) {
       padding-top: 50px;
     }
@@ -253,34 +253,22 @@ hr {
   }
 }
 
-.left {
+.productLeft  {
+  @media (min-width: 1024px) {
+    width: 65%;
+    float: left;
+  }
   img {
     max-width: 80%;
     height: auto;
   }
 }
 
-.productTwo {
-  .right {
-    margin-top: -24px;
-    top: -35%;
-    @media (min-width: 500px) {
-      top: -50%;
-    }
-    @media (min-width: 641px) {
-      top: 0;
-    }
-
-    @media (min-width: 900px) {
-      top: -100px;
-    }
-  }
-}
-
-.productRight {
+.productRightContent {
   width: 85%;
   text-align: left;
 }
+
 .productTitle {
   font-size: 22px;
   font-weight: 600;
@@ -309,23 +297,14 @@ hr {
   margin: 5px 0;
 }
 
-.left {
-  @media (min-width: 1024px) {
-    width: 65%;
-  }
-}
-
-.right {
+.productRight {
   padding-bottom: 70px;
   padding-left: 20px;
   width: 100%;
   transition: all ease-out 300ms;
-  position: absolute;
-  top: 30px;
+  position: fixed;
+  top: 50px;
   right: 0;
-  @media (min-width: 641px) {
-    top: -30px;
-  }
   @media (min-width: 1024px) {
     padding-left: 40px;
     padding-bottom: 40px;
@@ -373,18 +352,22 @@ hr {
     }
   }
 }
-.productOne .left .carousel__slide {
+
+.productTwo {
+  .productRight {
+    margin-top: -24px;
+    top: 350px;
+    @media (min-width: 500px) {
+      top: 400px;
+    }
+  }
+}
+.productOne .productLeft  .carousel__slide {
   padding: 40px 0 0 !important;
 }
 
 .productTwo .carousel__slide {
   padding: 0 0 40px !important;
-}
-
-.left {
-  @media (min-width: 1024px) {
-    float: left;
-  }
 }
 
 .productOne,

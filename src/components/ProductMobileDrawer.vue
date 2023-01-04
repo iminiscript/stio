@@ -1,5 +1,5 @@
 <template>
-    <div :class="productStore.backGround" class="bg">
+    <div :class="productStore.backGround" class="mobileBG">
         <span @click="productStore.openCartDrawer" class="close">
             <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-close" viewBox="0 0 20 20">
                 <title>Icon Close</title>
@@ -8,9 +8,7 @@
              </svg>
         </span>
     </div>
-
-    <div class="mobileOpnBtn" @click="productStore.openCartDrawer">Select Color &amp; Size </div>
-
+    <div class="mobileBtn" @click="productStore.openProductDrawer">Select Color &amp; Size </div>
 </template>
 
 
@@ -22,7 +20,7 @@
 </script>
 
 <style lang="scss" scoped>
-.mobileOpnBtn {
+.mobileBtn {
   max-width: 230px;
   margin: auto;
   border-radius: 6px;
@@ -37,7 +35,7 @@
 
 }
 
-.bg {
+.mobileBG {
     position: fixed;
     width: 100%;
     height: 100%;
