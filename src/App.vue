@@ -1,7 +1,7 @@
 <script setup>
 
 import { useProductStore } from "@/stores/productStore.js";
-import { ref, computed, reactive } from "vue";
+//import { onMounted } from "vue";
 
 const productStore = useProductStore();
 productStore.fetchProduct();
@@ -11,6 +11,15 @@ import ProductCard from "@/components/ProductCard.vue";
 import ProductBorder from "@/components/ProductBorder.vue";
 
 import ProductMobileDrawer from "@/components/ProductMobileDrawer.vue";
+
+
+// onMounted(() => {
+// 	const currentProgress = window.performance.timing.domContentLoadedEventEnd;
+// 	const totalProgress = window.performance.timing.domComplete;
+// 	if (currentProgress / totalProgress >= 0.99) {
+// 	window.stop();
+// 	}
+// });
 
 </script>
 

@@ -59,9 +59,7 @@ export const useProductStore = defineStore({
 				console.error(error);
 			} finally {
 				// Set isLoading to false after the request finishes (whether it succeeds or fails)
-				setTimeout(() => {
-					this.isLoading = false;
-				}, 2000); // delay of 2 seconds to built up the slider 
+				this.isLoading = false;
 			}
 		},
 		
