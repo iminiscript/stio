@@ -1,5 +1,10 @@
 <script setup>
-    defineProps({title: String, url: String, subTitle: String});
+    // Declare the props for the component
+    const props =  defineProps({
+        title: String, 
+        url: String, 
+        subTitle: String
+    });
 </script>
 
 <template>

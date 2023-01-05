@@ -1,30 +1,73 @@
-# stio
 
-This template should help get you started developing with Vue 3 in Vite.
+# [STIO Kit Builder](https://stio-dev.netlify.app/ )
 
-## Recommended IDE Setup
+The project has been built ```Vue3 Composition API```. It uses ```PINIA``` as a tool for building robust and maintainable stores. 
+The ```.env``` files for the project are also hosted on ```Netlify```, allowing for easy configuration and management of environment variables.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Customize configuration
+## Author
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- [@iminiscript](https://www.github.com/iminiscript)
 
-## Project Setup
+## Tech Stack
 
-```sh
-npm install
+[Vue3 Composition API:](https://v3.vuejs.org/guide/composition-api-introduction.html) The Composition API is a flexible way to build components and reusable logic in Vue.js 3.
+
+[PINIA:](https://pinia.vuejs.org/) PINIA is 💡 Intuitive 🔑 Type Safe ⚙️ Devtools support 🔌 Extensible 🏗 Modular by design 📦 Extremely light state management tool. 
+## Getting Started 
+
+To get started with this project, follow these steps: 
+
+
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone git@github.com:iminiscript/stio.git stio-dev
 ```
 
-### Compile and Hot-Reload for Development
+Go to the project directory
 
-```sh
-npm run dev
+```bash
+  cd stio-dev
 ```
 
-### Compile and Minify for Production
+Duplicate ```.env.sample``` file and create ```.env```
 
-```sh
-npm run build
+Add the Product API's URL into ```.env``` file
+
+For example 
+
+```bash
+
+VITE_API_URL = https://www.stio.com/products/mens-objective-pro-jacket?view=json
+
+VITE_API_URL_BOTTOM = https://www.stio.com/products/mens-objective-pro-bib?view=json
+
+``` 
+
+To display products, add ```URL's``` to the ```"Top"``` and ```"Bottom"``` **keys** and they will be shown on the frontend.
+
+Install dependencies
+
+```bash
+  yarn install
 ```
->>>>>>> 96355d7 (first commit)
+
+
+Start the server
+
+```bash
+  npm run start
+```
+
+## Demo
+
+https://stio-dev.netlify.app/ 
+
+## Deployment
+
+To deploy this project merge your branch with ```main``` and it'll auto deploy.
+
+

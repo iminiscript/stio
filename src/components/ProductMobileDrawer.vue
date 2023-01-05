@@ -8,30 +8,35 @@
              </svg>
         </span>
     </div>
-    <div class="mobileBtn" @click="productStore.openProductDrawer">Select Color &amp; Size </div>
+    <div class="mobileBtn" @click="productStore.openProductDrawer">
+        {{ title }}
+    </div>
 </template>
 
-
 <script setup>
+    // Import the product store functions for the drawer
     import { useProductStore } from '@/stores/productStore.js';
     const productStore = useProductStore();
 
-    // defineProps({title: String, url: String, subTitle: String});
+    // Declare the props for the component
+    const props =  defineProps({
+        title: String, 
+    });
 </script>
 
 <style lang="scss" scoped>
 .mobileBtn {
-  max-width: 230px;
-  margin: auto;
-  border-radius: 6px;
-  border: 1px solid;
-  text-align: center;
-  padding: 10px 20px;
-  text-transform: uppercase;
-  font-size: .688rem;
-  @media (min-width: 1024px){
-    display: none;
-  }
+    max-width: 230px;
+    margin: auto;
+    border-radius: 6px;
+    border: 1px solid;
+    text-align: center;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    font-size: .688rem;
+    @media (min-width: 1024px){
+        display: none;
+    }
 
 }
 
