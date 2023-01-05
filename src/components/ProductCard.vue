@@ -203,50 +203,6 @@ const getUpdatedSwatchSize = (products, productHandle, swatchName, size) => {
   products.splice(index, 1, updatedProduct);
 };
 
-// const getUpdatedSwatchSize = (productsList, productHandle, swatchName, size) => {
-//   // Find the product with the matching handle
-	
-// 	const product = productsList.find(
-//     (product) => product.handle === productHandle
-//   );
-
-//   // Find the variant with the matching alt text
-//   const variant = product.variants.find(
-//     (variant) => variant.option1 === swatchName
-//   );
-//   const variant2 = product.variants.find((variant) => variant.option2 === size);
-
-//   const dataType = product.tags.find(
-//     (tag) => tag === "mixmatch_top" || tag === "mixmatch_bottom"
-//   );
-//   // Update the product properties based on the product type
-//   let updatedProduct;
-//   if (swatchName) {
-//     updatedProduct = {
-//       ...product,
-//       imageUrl: variant?.featured_image.src,
-//       activeClass: variant?.option1,
-
-//     };
-//   } else if (size) {
-//     updatedProduct = {
-//       ...product,
-//       sizeClass: variant2?.option2,
-//     };
-//   }
-
-//   //console.log(product)
-//   // Update the products array based on the product type
-//   if (dataType === "mixmatch_top") {
-//     productStore.products = productsList.map((product) =>
-//       product.handle === productHandle ? updatedProduct : product
-//     );
-//   } else if (dataType === "mixmatch_bottom") {
-//     productStore.bottomProducts = productsList.map((product) =>
-//       product.handle === productHandle ? updatedProduct : product
-//     );
-//   }
-// };
 
 </script>
 
