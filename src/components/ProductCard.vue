@@ -85,31 +85,37 @@ import { ref, computed} from "vue";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 
+// Import the product store and fetch the products
 const productStore = useProductStore();
-
 productStore.fetchProduct();
 
+// Declare the props for the component
 const props = defineProps({
   products: Object,
   productsBottom: String,
   image: String,
 });
 
+// Refs for the current slide indices for the carousels
 const currentSlide = ref(0);
 const currentSlideTwo = ref(0);
 
+// Set the current slide index for a carousel
 const slideTo = (index) => {
   currentSlideTwo.value = index;
 };
 
+// Set the current slide index for a carousel to the next slide
 const slideToNext = (index) => {
   currentSlideTwo.value = index;
 };
 
+// fun for the carousel configuration items to show
 const imgSettings = ref({
   itemsToShow: 1,
 });
 
+// fun for the responsive breakpoints configurations 
 const imgBrkpoints = ref({
   641: {
     itemsToShow: 3,
@@ -117,10 +123,12 @@ const imgBrkpoints = ref({
 });
 
 
+// Format the price by taking price as an argument and returned the calcs
 const formatedPrice = (price) => {
   return "$" + (price / 100).toLocaleString();
 };
 
+// Object that maps long size names to shorthand size names
 const sizeMappings = {
   "Extra Small": "XS",
   "Small": "S",
@@ -131,33 +139,36 @@ const sizeMappings = {
   "Extra Extra Extra Large": "XXXL",
 };
 
+// This fun takes a long size name as an argument and returns the shorthand size name
 const toShortHandSize = (size) => {
   return sizeMappings[size] || size;
 };
 
 
-
+// This fun checks the inventory for disable class on OOS items
 const checkInventory = (product, productHandle, size, swatch) => {
   // Find the variant with the given size and swatch values
   const variant = product.variants.find(
     (variant) => variant.option2 === size && variant.option1 === swatch
   );
-
+	// Return the inventory quantity of the matching variant 
   return variant.inventory_quantity;
 };
 
-
-
+// This fun gives us the swatch color images from the product images
 const getSwatchImage =  (products, item) => {
-  const product = products.find((product) => {
+	// Find the product with an image that has an alt text matching the item name followed by " swatch"
+  	const product = products.find((product) => {
     	return product.images.some((image) => image.alt === `${item} swatch`);
-  });
+  	});
+	// Return the src attribute of the image with the matching alt text, or null if no such image is found
 	return {
 		imgSrc: product?.images.find((image) => image.alt === `${item} swatch`)?.src || null, 
 	}
   
 };
 
+// This fun checks the availbilty of first variant where we will add the active class 
 const firstAvailableVariant = (product, swatch, size) => {
   // Check if the activeClass property is already set
   if (product.activeClass || product.sizeClass) {
@@ -171,6 +182,7 @@ const firstAvailableVariant = (product, swatch, size) => {
   return 'active';
 }
 
+// This fun changes the main image on click of swatch and size selection
 const getUpdatedSwatchSize = (products, productHandle, swatchName, size) => {
   // Find the product with the matching handle
   const index = products.findIndex(
