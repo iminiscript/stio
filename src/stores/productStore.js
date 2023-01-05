@@ -33,7 +33,7 @@ export const useProductStore = defineStore({
 			this.bottomProducts = responseBottom;
 			this.isLoading = false;
 		},
-		openCartDrawer() {
+		openProductDrawer() {
 
 			if (this.mobileSlider === "open") {
 				this.mobileSlider = "close";
