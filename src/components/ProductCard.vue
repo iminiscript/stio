@@ -26,7 +26,7 @@
       :wrap-around="true"
       id="thumbnails"
       class="productRight productBox"
-      :class="productStore.mobileProductSlider"
+      :class="productStore.mobileSlider"
       ref="carousel"
     >
       <Slide v-for="(product, index) in products" :key="product.id">
@@ -47,38 +47,24 @@
                 v-for="swatch in product.options[0].values"
               >
                 <span
-                  :class="
-                    ({ active: product.activeClass === swatch },
-                    firstAvailableVariant(product, swatch, null))
-                  "
-                  @click="
-                    getUpdatedSwatchSize(products, product.handle, swatch, null)
-                  "
+                  :class="{ active: product.activeClass === swatch }, firstAvailableVariant(product, swatch, null)"
+
+                  @click="getUpdatedSwatchSize(products, product.handle, swatch, null)"
                   class="productSwatchImg"
                 >
                   <img :src="getSwatchImage(products, swatch).imgSrc" />
                 </span>
-                <!-- <span>{{ swatch }} </span> -->
+								<!-- <span>{{ swatch }} </span> -->
               </div>
             </div>
             <div class="size">
               <div
-                :class="
-                  ({
-                    active: product.sizeClass === size,
-                    disable: !checkInventory(
-                      product,
-                      product.handle,
-                      size,
-                      product.activeClass
-                    ),
-                  },
-                  firstAvailableVariant(product, null, size))
-                "
+                :class="{
+                  active: product.sizeClass === size,
+                  disable: !checkInventory(product, product.handle, size, product.activeClass),
+                }, firstAvailableVariant(product, null, size)"
                 :key="size"
-                @click="
-                  getUpdatedSwatchSize(products, product.handle, null, size)
-                "
+                @click="getUpdatedSwatchSize(products, product.handle, null, size)"
                 class="productSize"
                 v-for="size in product.options[1].values"
               >
@@ -95,140 +81,143 @@
 
 <script setup>
 import { useProductStore } from "@/stores/productStore.js";
-import { ref, computed } from "vue";
+import { ref, computed} from "vue";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 
-// Import the product store and fetch the products
 const productStore = useProductStore();
+
 productStore.fetchProduct();
 
-// Declare the props for the component
 const props = defineProps({
   products: Object,
   productsBottom: String,
   image: String,
 });
 
-// Refs for the current slide indices for the carousels
 const currentSlide = ref(0);
 const currentSlideTwo = ref(0);
 
-// Set the current slide index for a carousel
 const slideTo = (index) => {
   currentSlideTwo.value = index;
 };
 
-// Set the current slide index for a carousel to the next slide
 const slideToNext = (index) => {
   currentSlideTwo.value = index;
 };
 
-// For the carousel configuration
 const imgSettings = ref({
   itemsToShow: 1,
 });
 
-// For the carousel breakpoint configuration
 const imgBrkpoints = ref({
   641: {
     itemsToShow: 3,
   },
 });
 
-// This takes price as an argument and returns a formatted price string
+
 const formatedPrice = (price) => {
-  // Divide the price by 100 and convert it to a string with the correct locale-specific formatting
-  const formattedPrice = (price / 100).toLocaleString();
-  // Return the formatted price string with a "$" symbol added
-  return "$" + formattedPrice;
+  return "$" + (price / 100).toLocaleString();
 };
 
-// Object that maps long size names to shorthand size names
 const sizeMappings = {
   "Extra Small": "XS",
-  Small: "S",
-  Medium: "M",
-  Large: "L",
+  "Small": "S",
+  "Medium": "M",
+  "Large": "L",
   "Extra Large": "XL",
   "Extra Extra Large": "XXL",
   "Extra Extra Extra Large": "XXXL",
 };
 
-// This takes a long size name as an argument and returns the corresponding shorthand size name
 const toShortHandSize = (size) => {
   return sizeMappings[size] || size;
 };
+
+
 
 const checkInventory = (product, productHandle, size, swatch) => {
   // Find the variant with the given size and swatch values
   const variant = product.variants.find(
     (variant) => variant.option2 === size && variant.option1 === swatch
   );
-  // Return the inventory quantity of the matching variant
+
   return variant.inventory_quantity;
 };
 
-const getSwatchImage = (products, item) => {
-  // Find the product with an image that has an alt text matching the item name followed by " swatch"
+
+
+const getSwatchImage =  (products, item) => {
   const product = products.find((product) => {
-    return product.images.some((image) => image.alt === `${item} swatch`);
+    	return product.images.some((image) => image.alt === `${item} swatch`);
   });
-  // Return the src attribute of the image with the matching alt text, or null if no such image is found
-  return {
-    imgSrc:
-      product?.images.find((image) => image.alt === `${item} swatch`)?.src ||
-      null,
-  };
+	return {
+		imgSrc: product?.images.find((image) => image.alt === `${item} swatch`)?.src || null, 
+	}
+  
 };
 
 const firstAvailableVariant = (product, swatch, size) => {
   // Check if the activeClass property is already set
   if (product.activeClass || product.sizeClass) {
-    return "";
+    return '';
   }
   // Set the activeClass property to the first available variant for swatch
   product.activeClass = product.first_variant.option1;
   // Set the sizeClass property to the first available variant for size
   product.sizeClass = product.first_variant.option2;
   // Return 'active'
-  return "active";
-};
+  return 'active';
+}
 
-const getUpdatedSwatchSize = (products, productHandle, swatchName, size) => {
+
+
+const getUpdatedSwatchSize = (productsList, productHandle, swatchName, size) => {
   // Find the product with the matching handle
-  const index = products.findIndex(
+	
+	const product = productsList.find(
     (product) => product.handle === productHandle
   );
 
-  const product = products[index];
-
-  // Find the variant with the matching alt text of images
-  const variantSwatch = product.variants.find(
+  // Find the variant with the matching alt text
+  const variant = product.variants.find(
     (variant) => variant.option1 === swatchName
   );
-  // Find the variant related to size as well
-  const variantSize = product.variants.find(
-    (variant) => variant.option2 === size
-  );
+  const variant2 = product.variants.find((variant) => variant.option2 === size);
 
-  // This variable will be used to update the product properties
+  const dataType = product.tags.find(
+    (tag) => tag === "mixmatch_top" || tag === "mixmatch_bottom"
+  );
+  // Update the product properties based on the product type
   let updatedProduct;
   if (swatchName) {
     updatedProduct = {
       ...product,
-      imageUrl: variantSwatch?.featured_image.src,
-      activeClass: variantSwatch?.option1,
+      imageUrl: variant?.featured_image.src,
+      activeClass: variant?.option1,
+
     };
   } else if (size) {
     updatedProduct = {
       ...product,
-      sizeClass: variantSize?.option2,
+      sizeClass: variant2?.option2,
     };
   }
-  // Update the active product with new properties
-  products.splice(index, 1, updatedProduct);
+
+  //console.log(product)
+  // Update the products array based on the product type
+  if (dataType === "mixmatch_top") {
+    productStore.products = productsList.map((product) =>
+      product.handle === productHandle ? updatedProduct : product
+    );
+  } else if (dataType === "mixmatch_bottom") {
+    productStore.bottomProducts = productsList.map((product) =>
+      product.handle === productHandle ? updatedProduct : product
+    );
+  }
 };
+
 </script>
 
 <style lang="scss" scoped>
@@ -264,7 +253,7 @@ hr {
   }
 }
 
-.productLeft {
+.productLeft  {
   @media (min-width: 1024px) {
     width: 65%;
     float: left;
@@ -373,7 +362,7 @@ hr {
     }
   }
 }
-.productOne .productLeft .carousel__slide {
+.productOne .productLeft  .carousel__slide {
   padding: 40px 0 0 !important;
 }
 
