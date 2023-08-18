@@ -11,7 +11,7 @@
     >
       <Slide :key="product.id" v-for="(product, index) in products">
         <img
-          :src="product.imageUrl ?? product.first_variant.featured_image.src"
+          :src="product.imageUrl ?? product.variants[0].featured_image"
         />
       </Slide>
       <template #addons>
@@ -175,9 +175,9 @@ const firstAvailableVariant = (product, swatch, size) => {
     return '';
   }
   // Set the activeClass property to the first available variant for swatch
-  product.activeClass = product.first_variant.option1;
+  product.activeClass = product.variants[0].option1;
   // Set the sizeClass property to the first available variant for size
-  product.sizeClass = product.first_variant.option2;
+  product.sizeClass = product.variants[0].option2;
   // Return 'active'
   return 'active';
 }
@@ -193,6 +193,8 @@ const getUpdatedSwatchSize = (products, productHandle, swatchName, size) => {
   const variantSwatch = product.variants.find(
     (variant) => variant.option1 === swatchName
   );
+  console.log("🚀 ~ file: ProductCard.vue:196 ~ getUpdatedSwatchSize ~ variantSwatch:", variantSwatch)
+
   // Find the variant related to size as well
   const variantSize = product.variants.find(
     (variant) => variant.option2 === size
@@ -202,7 +204,7 @@ const getUpdatedSwatchSize = (products, productHandle, swatchName, size) => {
   if (swatchName) {
     updatedProduct = {
       ...product,
-      imageUrl: variantSwatch?.featured_image.src,
+      imageUrl: variantSwatch?.featured_image,
       activeClass: variantSwatch?.option1,
     };
   } else if (size) {
@@ -211,6 +213,7 @@ const getUpdatedSwatchSize = (products, productHandle, swatchName, size) => {
       sizeClass: variantSize?.option2,
     };
   }
+  console.log(updatedProduct);
   // Update the active product with new properties
   products.splice(index, 1, updatedProduct);
 };
