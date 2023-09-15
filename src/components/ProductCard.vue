@@ -25,8 +25,8 @@
       :transition="500"
       :wrap-around="true"
       id="thumbnails"
-      class="productRight productBox"
-      :class="productStore.mobileSlider"
+      class="productRight productBox l-28"
+      
       ref="carousel"
     >
       <Slide v-for="(product, index) in products" :key="product.id">
@@ -87,7 +87,7 @@ import "vue3-carousel/dist/carousel.css";
 
 // Import the product store and fetch the products
 const productStore = useProductStore();
-productStore.fetchProduct();
+//productStore.openProductDrawer();
 
 // Declare the props for the component
 const props = defineProps({

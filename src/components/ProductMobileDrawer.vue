@@ -18,6 +18,8 @@
     import { useProductStore } from '@/stores/productStore.js';
     const productStore = useProductStore();
 
+    //productStore.openProductDrawer();
+
     // Declare the props for the component
     const props =  defineProps({
         title: String, 
